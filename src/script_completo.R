@@ -21,7 +21,7 @@
 
 ## 0.1. Variáveis de controle -----
 
-path_working_directory  <- "C:/Users/dudas/Documents/enm"
+path_working_directory  <- "C:/Users/lucas/Documents/Projects/enm"
 setwd(path_working_directory)
 
 interromper_execucao  <- 5      # <n>: (1, 2, ...) executa até a seção <n> e para antes de <n+1> / FALSE: roda todas as seções em sequência
@@ -75,7 +75,7 @@ t7_modelos_adequabilidade     <- TRUE       # Modelos de Adequabilidade
   t7_val_modelo_replication   <- "boot"       # modo de sorteio dos dados para modelagem (Cross-Validation)
   t7_val_modelo_cv_folds      <- num_obs    # número de replicações na calibração do modelo
   t7_val_modelo_reg		        <- 2          # penalidade para modelos de alta complexidade
-  t7_path_salvar_modelo       <- "defesa/modelos/"
+  t7_path_salvar_modelo       <- "modelos/"
   
 t8_projetar_mapas                     <- TRUE        # Projetar mapas de Adequabilidade
   t8_val_ensemble_method            	<- "weighted"  # peso diferente para cada projeção
@@ -83,8 +83,8 @@ t8_projetar_mapas                     <- TRUE        # Projetar mapas de Adequab
   t8_val_ensemble_opt             		<- 2           # maximização da especificidade e sensibilidade do modelo
   t8_opt_salvar_modelo_ens                <- TRUE
   t8_path_projecao	                	<- "projecoes/"
-  t8_path_ensemble_presente	          <- "defesa/projecoes/"
-  t8_path_ensemble_predict_presente   <- "defesa/projecoes/"
+  t8_path_ensemble_presente	          <- "projecoes/"
+  t8_path_ensemble_predict_presente   <- "projecoes/"
 
 t9_cenarios_futuros            	  	<- TRUE         # Cenários Futuros
   t9_opt_download_cenarios     	  	<- FALSE        # TRUE: faz download dos cenários do WorldClim / FALSE: carrega os cenários já baixados
@@ -98,15 +98,15 @@ t9_cenarios_futuros            	  	<- TRUE         # Cenários Futuros
   t9_val_ensemble_stat	  	   	  	<- t8_val_ensemble_stat    # cálculo com base na estatística TSS
   t9_val_ensemble_opt		       	  	<- t8_val_ensemble_opt     # maximização da especificidade e sensibilidade do modelo
   t9_path_download		         	  	<- "variaveis/futuros/"
-  t9_path_cenarios_originais   	  	<- "variaveis/futuros/climate/wc2.1_30s/"
-  t9_path_cenarios_cortados   	  	<- "variaveis/futuros/climate/wc2.1_30s/brazil_extent/"
-  t9_path_ensemble_futuro           <- "defesa/projecoes/"
-  t9_path_ensemble_predict_futuro   <- "defesa/projecoes/"
+  t9_path_cenarios_originais   	  	<- "variaveis/world_clim/futuro/wc2.1_30s/"
+  t9_path_cenarios_cortados   	  	<- "variaveis/world_clim/futuro/wc2.1_30s/brazil_extent/"
+  t9_path_ensemble_futuro           <- "projecoes/"
+  t9_path_ensemble_predict_futuro   <- "projecoes/"
   t9_sufixo_bio_fut            	  	<- t3_sufixo_bio
 
 t10_mapas_finais        <- TRUE   # Geração dos mapas
   t10_opt_salvar_mapas  <- FALSE
-  t10_path_salvar_plot  <- "defesa/imagens/"
+  t10_path_salvar_plot  <- "imagens/"
 
 
 # Salva o mês, dia e id
@@ -690,8 +690,8 @@ if ( t7_modelos_adequabilidade == TRUE ){
   )
   
   # Defina o caminho para salvar os pontos de background
-  bg_file_path <- paste0(t7_path_salvar_modelo, "Jan-4_pontos_background(",
-                         id_modelos_salvamento, ").csv")
+  bg_file_path <- paste0(t7_path_salvar_modelo, current_month, "-", current_day,
+                         "_pontos_background(", id_modelos_salvamento, ").csv")
   
   # Salve os pontos de background em um arquivo CSV
   write.csv(bg_df, file = bg_file_path, row.names = FALSE)
@@ -844,7 +844,7 @@ if ( t8_projetar_mapas == TRUE ){
   ens_vinacea_pres_mask <- crop(ens_vinacea, extent(MA_s2000))
   ens_vinacea_pres_mask <- mask(ens_vinacea_pres_mask, MA_s2000)
   
-  path_modelo <- paste0("defesa/projecoes/", current_month, "-", current_day,
+  path_modelo <- paste0(t8_path_projecao, current_month, "-", current_day,
                         "_ens_pres_cut_(", id_modelos_salvamento, ").tif")
   
   if (file.exists(path_modelo)) {
@@ -1178,29 +1178,6 @@ if ( t9_cenarios_futuros == TRUE ){
     return(f_name)
   }
   
-  # # Define os nomes dos arquivos do ensemble e predict
-  # path_filename_1 <- func_path_filename("_", "245", "2021")
-  # path_filename_2 <- func_path_filename("_", "245", "2041")
-  # path_filename_3 <- func_path_filename("_", "245", "2061")
-  # path_filename_4 <- func_path_filename("_", "245", "2081")
-  # path_filename_5 <- func_path_filename("_", "585", "2021")
-  # path_filename_6 <- func_path_filename("_", "585", "2041")
-  # path_filename_7 <- func_path_filename("_", "585", "2061")
-  # path_filename_8 <- func_path_filename("_", "585", "2081")
-  # path_filename_list <- list(path_filename_1, path_filename_2, path_filename_3, path_filename_4,
-  #                            path_filename_5, path_filename_6, path_filename_7, path_filename_8)
-  # 
-  # path_pFilename_1 <- func_path_filename("_p_", "245", "2021")
-  # path_pFilename_2 <- func_path_filename("_p_", "245", "2041")
-  # path_pFilename_3 <- func_path_filename("_p_", "245", "2061")
-  # path_pFilename_4 <- func_path_filename("_p_", "245", "2081")
-  # path_pFilename_5 <- func_path_filename("_p_", "585", "2021")
-  # path_pFilename_6 <- func_path_filename("_p_", "585", "2041")
-  # path_pFilename_7 <- func_path_filename("_p_", "585", "2061")
-  # path_pFilename_8 <- func_path_filename("_p_", "585", "2081")
-  # path_pFilename_list <- list(path_pFilename_1, path_pFilename_2, path_pFilename_3, path_pFilename_4,
-  #                            path_pFilename_5, path_pFilename_6, path_pFilename_7, path_pFilename_8)
-  
   # Função que roda um ensemble, será chamada abaixo para cada cenário
   func_ensemble <- function( new_data, ens_file_name, ens_p_file_name, pred_p_file_name ){
     require(sdm)
@@ -1409,12 +1386,6 @@ func_plotar_graficos <- function( ensemble_v ){
       labels = expression(italic("Amazona vinacea (Kuhl, 1820)"))
     ) +
     coord_sf() +
-    # annotation_north_arrow(
-    #   location = "br",
-    #   which_north = "true",
-    #   style = north_arrow_fancy_orienteering,
-    #   pad_x = unit(0.25, "in"), pad_y = unit(0.30, "in")
-    # ) +
     annotation_scale(location = "br", width_hint = 0.5) +
     labs(
       x = "Longitude", # texto do eixo x
